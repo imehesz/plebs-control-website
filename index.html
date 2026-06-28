@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plebs Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cinzel', serif;
+      min-height: 100vh;
+      background-color: #1a1510;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    /* Dark overlay so content stays readable over any B&W image */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.75);
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .emblem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      min-width: 82px;
+    }
+
+    .shield {
+      width: 72px;
+      height: 82px;
+      background: linear-gradient(160deg, #909090, #585858, #787878);
+      border-radius: 6px 6px 44% 44% / 6px 6px 52% 52%;
+      border: 2px solid #404040;
+      box-shadow: 3px 4px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 6px 4px 10px;
+    }
+
+    .shield-eagle { font-size: 30px; line-height: 1; filter: sepia(1) saturate(0.4) brightness(1.6); }
+    .shield-spqr  { font-size: 9px; font-weight: 700; color: #d4b86a; letter-spacing: 2px; }
+
+    .emblem-label {
+      background: linear-gradient(135deg, #666, #3a3a3a);
+      border: 1px solid #303030;
+      padding: 4px 10px;
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #d4b86a;
+      letter-spacing: 0.8px;
+      text-align: center;
+      box-shadow: 1px 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .title-block {
+      flex: 1;
+      text-align: center;
+      padding: 0 10px;
+      min-width: 180px;
+    }
+
+    .game-title {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      font-size: clamp(24px, 5.5vw, 46px);
+      font-weight: 700;
+      color: #f0e8d0;
+      line-height: 1.05;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 1px 0 rgba(0,0,0,0.5);
+    }
+
+    .title-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 7px auto;
+    }
+    .title-rule span { flex: 1; height: 1px; background: linear-gradient(to right, transparent, #d4b86a 40%, #d4b86a 60%, transparent); }
+    .title-rule i    { width: 6px; height: 6px; background: #d4b86a; transform: rotate(45deg); display: block; }
+
+    /* Nav tabs */
+    .nav-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 128px;
+    }
+
+    .nav-tab {
+      background: linear-gradient(135deg, #828282, #484848, #686868);
+      color: #e8d490;
+      padding: 8px 22px 8px 13px;
+      font-family: 'Cinzel', serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+      cursor: pointer;
+      border: none;
+      text-align: left;
+      box-shadow: 2px 3px 6px rgba(0,0,0,0.5);
+      transition: background 0.15s, transform 0.1s;
+    }
+    .nav-tab:hover { background: linear-gradient(135deg, #a0a0a0, #606060, #888); transform: translateX(2px); }
+
+    /* ── HERO IMAGE ── */
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: clamp(180px, 35vw, 280px);
+      overflow: hidden;
+    }
+
+    .hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.55) 100%);
+    }
+
+    .tagline {
+      position: absolute;
+      bottom: 20px;
+      transition: opacity 0.4s ease;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: clamp(18px, 4.5vw, 36px);
+      font-weight: 900;
+      color: #fff8e8;
+      letter-spacing: 3px;
+      line-height: 1.15;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 1px 0 rgba(0,0,0,0.7);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-top: 14px;
+    }
+
+    /* Side panels */
+    .side-panel {
+      width: 140px;
+      flex-shrink: 0;
+      background: linear-gradient(160deg, #3c3c3c, #1c1c1c, #2c2c2c);
+      border: 2px solid #585858;
+      box-shadow: 3px 4px 12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #4a4a4a, #282828);
+      padding: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #d4b86a;
+      letter-spacing: 1.5px;
+      text-align: center;
+      border-bottom: 1px solid #585858;
+    }
+
+    .panel-image {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      display: block;
+      filter: sepia(0.3) contrast(1.1);
+    }
+
+    .panel-body {
+      padding: 10px;
+      font-size: 9.5px;
+      color: #c0c0c0;
+      line-height: 1.55;
+    }
+
+    .panel-rule {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #6a5030, transparent);
+      margin: 9px 0;
+    }
+
+    .event-name { color: #e8d490; font-weight: 700; font-size: 10.5px; letter-spacing: 0.5px; text-align: center; display: block; }
+    .event-date { color: #909090; font-size: 9px; text-align: center; display: block; margin-top: 2px; }
+
+    /* ── SCROLL ── */
+    .scroll-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .scroll-rod {
+      width: 100%;
+      height: 20px;
+      background: linear-gradient(180deg, #d09060 0%, #9a6840 30%, #b07848 50%, #9a6840 70%, #d09060 100%);
+      border-radius: 12px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,220,180,0.3);
+      position: relative;
+      z-index: 2;
+    }
+    .scroll-rod::before, .scroll-rod::after {
+      content: '';
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 33%, #d8a070, #9a6030, #5a3010);
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.55);
+    }
+    .scroll-rod::before { left: -12px; }
+    .scroll-rod::after  { right: -12px; }
+
+    .scroll-body {
+      background: linear-gradient(160deg, #dbb26a, #c89848, #e4c080, #c89848, #b88438);
+      padding: 28px 36px 24px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    }
+
+    .scroll-body::before, .scroll-body::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      background:
+        radial-gradient(circle at  4% 0, transparent 10px, #dbb26a 10px),
+        radial-gradient(circle at 12% 0, transparent  7px, #dbb26a  7px),
+        radial-gradient(circle at 21% 0, transparent 11px, #dbb26a 11px),
+        radial-gradient(circle at 31% 0, transparent  6px, #dbb26a  6px),
+        radial-gradient(circle at 42% 0, transparent  9px, #dbb26a  9px),
+        radial-gradient(circle at 53% 0, transparent  8px, #dbb26a  8px),
+        radial-gradient(circle at 63% 0, transparent 10px, #dbb26a 10px),
+        radial-gradient(circle at 73% 0, transparent  7px, #dbb26a  7px),
+        radial-gradient(circle at 83% 0, transparent 11px, #dbb26a 11px),
+        radial-gradient(circle at 93% 0, transparent  6px, #dbb26a  6px);
+    }
+    .scroll-body::before { top: -10px; }
+    .scroll-body::after  { bottom: -10px; transform: rotate(180deg); }
+
+    .form-field { margin-bottom: 22px; }
+
+    .field-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #555, #333);
+      color: #e8d490;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 11px;
+      margin-bottom: 6px;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+    }
+
+    .field-input {
+      display: block;
+      width: 100%;
+      height: 36px;
+      background: rgba(240, 218, 168, 0.55);
+      border: none;
+      border-bottom: 2px solid rgba(100, 68, 20, 0.5);
+      outline: none;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: #3a2210;
+      padding: 0 10px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .field-select {
+      display: block;
+      width: 100%;
+      height: 36px;
+      background: rgba(240, 218, 168, 0.55);
+      border: none;
+      border-bottom: 2px solid rgba(100, 68, 20, 0.5);
+      outline: none;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: #3a2210;
+      padding: 0 10px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%233a2210'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    /* WAX SEAL */
+    .seal-row {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .seal-band {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      left: -36px; right: -36px;
+      height: 26px;
+      background: linear-gradient(180deg, #5c5c5c, #2e2e2e, #484848);
+      border-top: 1px solid #6a6a6a;
+      border-bottom: 1px solid #222;
+    }
+
+    .wax-seal {
+      width: 108px; height: 108px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #d03030, #8a1818, #540808);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.7), inset 0 3px 5px rgba(255,80,80,0.18), 0 0 0 4px #6c1414, 0 0 0 6px #8e2020;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      gap: 2px;
+      transition: transform 0.12s, box-shadow 0.12s;
+      border: none;
+    }
+    .wax-seal:hover {
+      transform: scale(1.04);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.8), inset 0 3px 5px rgba(255,80,80,0.18), 0 0 0 4px #6c1414, 0 0 0 6px #8e2020;
+    }
+    .seal-icon { font-size: 24px; filter: sepia(1) saturate(0.3) brightness(1.4); opacity: 0.8; }
+    .seal-text { font-size: 7.5px; font-weight: 700; color: rgba(230,170,170,0.85); letter-spacing: 1.5px; text-align: center; line-height: 1.4; }
+
+    .form-dictionary {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(100, 68, 20, 0.3);
+      font-size: 8px;
+      color: rgba(58, 34, 16, 0.65);
+      font-style: italic;
+      line-height: 1.9;
+      letter-spacing: 0.3px;
+    }
+
+    .form-dictionary strong {
+      font-style: normal;
+      font-weight: 700;
+      color: rgba(58, 34, 16, 0.85);
+      letter-spacing: 0.8px;
+    }
+
+    /* ── MAP SECTION ── */
+    .map-section {
+      margin-top: 28px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(110,88,48,0.5);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    .map-section img {
+      width: 100%;
+      height: clamp(180px, 35vw, 280px);
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: sepia(0.2) contrast(1.05);
+    }
+
+    .map-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+
+    .map-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .map-label {
+      position: absolute;
+      font-family: 'Cinzel', serif;
+      color: #f0e8d0;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.7);
+      font-size: clamp(9px, 1.8vw, 14px);
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      font-style: italic;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .page { padding: 16px 12px 32px; }
+
+      /* Header: emblem + title side by side, nav below full-width */
+      .header { gap: 8px; }
+
+      .nav-tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        min-width: unset;
+        order: 3;
+        gap: 4px;
+      }
+
+      .nav-tab {
+        clip-path: none;
+        flex: 1 1 calc(50% - 4px);
+        text-align: center;
+        padding: 8px 6px;
+        font-size: 9.5px;
+        letter-spacing: 1px;
+      }
+
+      /* Main content: scroll first, then panels side by side below */
+      .main-content {
+        flex-wrap: wrap;
+      }
+
+      .scroll-wrapper {
+        order: -1;
+        width: 100%;
+        flex: 0 0 100%;
+      }
+
+      .side-panel {
+        flex: 1 1 calc(50% - 7px);
+        width: auto;
+      }
+
+      .panel-image { height: 100px; }
+
+      .scroll-body { padding: 20px 20px 18px; }
+
+      .seal-band { left: -20px; right: -20px; }
+
+      .tagline { letter-spacing: 1.5px; bottom: 12px; }
+    }
+
+    @media (max-width: 380px) {
+      .emblem { min-width: 60px; }
+      .shield { width: 56px; height: 64px; }
+      .shield-eagle { font-size: 22px; }
+      .game-title { font-size: 22px; }
+      .nav-tab { font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="emblem">
+      <div class="shield">
+        <div class="shield-eagle">🦅</div>
+        <div class="shield-spqr">SPQR</div>
+      </div>
+      <div class="emblem-label">THE CHRONICLES<br>(HOME)</div>
+    </div>
+
+    <div class="title-block">
+      <h1 class="game-title">PLEBS<br>CONTROL</h1>
+      <div class="title-rule"><span></span><i></i><span></span></div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab">CAMPAIGNS</button>
+      <button class="nav-tab">LEGIONS</button>
+      <button class="nav-tab">MAPS</button>
+      <button class="nav-tab">FORUM</button>
+    </nav>
+  </header>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <img src="images/roman_hero.jpg" alt="Roman legions" />
+    <div class="hero-overlay"></div>
+    <h2 class="tagline" id="tagline">RECLAIM THE GLORY<br>OF THE EMPIRE</h2>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- Left: News panel -->
+    <aside class="side-panel">
+      <div class="panel-header">LATEST<br>NEWS</div>
+      <img class="panel-image" src="images/roman_news.jpg" alt="Roman dispatch" />
+      <div class="panel-body">
+        Recent dispatch<br>from Germania
+      </div>
+    </aside>
+
+    <!-- Center: Scroll -->
+    <div class="scroll-wrapper">
+      <div class="scroll-rod"></div>
+      <div class="scroll-body">
+
+        <div class="form-field">
+          <label class="field-label">NOMEN</label>
+          <input class="field-input" type="text" placeholder="Name" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">INSCRIPTIO</label>
+          <input class="field-input" type="email" placeholder="Email Address" />
+        </div>
+
+        <div class="form-field" style="margin-bottom:0">
+          <label class="field-label">CURSUS PUBLICUS TABELLARIUS</label>
+          <select class="field-select" id="dispatch-hour">
+            <option value="">EMAIL DELIVERY TIME</option>
+          </select>
+        </div>
+
+        <div class="seal-row">
+          <div class="seal-band"></div>
+          <button class="wax-seal">
+            <div class="seal-icon">🦅</div>
+            <div class="seal-text">SIGN UP NOW<br>· · · · ·</div>
+          </button>
+        </div>
+
+      </div>
+      <div class="scroll-rod"></div>
+    </div>
+
+    <!-- Right: Events panel -->
+    <aside class="side-panel">
+      <div class="panel-header">UPCOMING<br>EVENTS</div>
+      <img class="panel-image" src="images/roman_events.jpg" alt="Roman colosseum" />
+      <div class="panel-body">
+        <span class="event-name">SATURNALIA<br>FESTIVAL</span>
+        <span class="event-date">March 20</span>
+        <div class="panel-rule"></div>
+        <span class="event-name">BATTLE OF<br>AUGUSTA</span>
+        <span class="event-date">March 11</span>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- MAP SECTION -->
+  <div class="map-section">
+    <img src="images/roman_map.jpg" alt="Roman military camp" />
+    <div class="map-overlay"></div>
+    <div class="map-labels">
+      <span class="map-label" style="top:12px; left:16px;">PRÆTORIUM</span>
+      <span class="map-label" style="bottom:14px; left:50%; transform:translateX(-50%)">LEGIO VI VICTRIX</span>
+      <span class="map-label" style="bottom:14px; right:16px;">LEGIO VI VICTRIX</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Populate dispatch hour dropdown in local time, value = UTC hour
+  (function() {
+    function toRoman(n) {
+      if (n === 0) return 'N'; // Nulla — Romans had to start somewhere
+      const vals = [10, 9, 5, 4, 1];
+      const syms = ['X', 'IX', 'V', 'IV', 'I'];
+      let r = '';
+      for (let i = 0; i < vals.length; i++) {
+        while (n >= vals[i]) { r += syms[i]; n -= vals[i]; }
+      }
+      return r;
+    }
+
+    const select = document.getElementById('dispatch-hour');
+    const offsetHours = Math.round(new Date().getTimezoneOffset() / 60);
+    const labels = { 0: 'Midnight', 6: 'Dawn', 12: 'Noon', 18: 'Dusk' };
+    for (let local = 0; local < 24; local++) {
+      const utc = ((local + offsetHours) % 24 + 24) % 24;
+      const suffix = labels[local] ? ` — ${labels[local]}` : '';
+      const roman = toRoman(local);
+      const normal = String(local).padStart(2, '0');
+      const opt = document.createElement('option');
+      opt.value = utc;
+      opt.textContent = `${roman} (${normal}:00)${suffix}`;
+      select.appendChild(opt);
+    }
+  })();
+
+  const bgs = [
+    'images/bg_rome_1.jpg',
+    'images/bg_rome_2.jpg',
+    'images/bg_rome_3.jpg',
+    'images/bg_rome_4.jpg',
+    'images/bg_rome_5.jpg'
+  ];
+  document.body.style.backgroundImage = `url('${bgs[Math.floor(Math.random() * bgs.length)]}')`;
+
+  const phrases = [
+    'RECLAIM THE GLORY<br>OF THE EMPIRE',
+    'EVERY EMPIRE BEGINS<br>WITH A SINGLE STONE',
+    'GOVERN WISELY —<br>RISE HIGHER',
+    'FROM VILLAGE<br>TO ETERNAL CITY',
+    'KEEP THE CITIZENS FED<br>OR LOSE YOUR HEAD',
+    'SMALL TOWN TODAY,<br>ROME TOMORROW',
+    'EARN YOUR PROMOTION,<br>CLAIM A GREATER CITY',
+    'THE PLEBS DEMAND<br>BREAD AND GLORY',
+    'BUILD IT, RULE IT,<br>ASCEND',
+    'YOUR CITY AWAITS<br>ITS MASTER'
+  ];
+
+  const tagline = document.getElementById('tagline');
+  let lastIndex = 0;
+
+  function rotatePhrases() {
+    let next;
+    do { next = Math.floor(Math.random() * phrases.length); } while (next === lastIndex);
+    lastIndex = next;
+    tagline.style.opacity = '0';
+    setTimeout(() => {
+      tagline.innerHTML = phrases[next];
+      tagline.style.opacity = '1';
+    }, 400);
+  }
+
+  setInterval(rotatePhrases, 10000);
+</script>
+</body>
+</html>

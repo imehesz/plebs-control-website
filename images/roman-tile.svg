@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+  <!-- Grout base -->
+  <rect width="48" height="48" fill="#8c7250"/>
+  <!-- Row 1: cream, terracotta, cream, terracotta -->
+  <rect x="1"  y="1"  width="10" height="10" fill="#ddd0b0"/>
+  <rect x="13" y="1"  width="10" height="10" fill="#7a2c12"/>
+  <rect x="25" y="1"  width="10" height="10" fill="#ddd0b0"/>
+  <rect x="37" y="1"  width="10" height="10" fill="#7a2c12"/>
+  <!-- Row 2: terracotta, gold, terracotta, gold -->
+  <rect x="1"  y="13" width="10" height="10" fill="#7a2c12"/>
+  <rect x="13" y="13" width="10" height="10" fill="#b88430"/>
+  <rect x="25" y="13" width="10" height="10" fill="#7a2c12"/>
+  <rect x="37" y="13" width="10" height="10" fill="#b88430"/>
+  <!-- Row 3: cream, terracotta, cream, terracotta -->
+  <rect x="1"  y="25" width="10" height="10" fill="#ddd0b0"/>
+  <rect x="13" y="25" width="10" height="10" fill="#7a2c12"/>
+  <rect x="25" y="25" width="10" height="10" fill="#ddd0b0"/>
+  <rect x="37" y="25" width="10" height="10" fill="#7a2c12"/>
+  <!-- Row 4: terracotta, gold, terracotta, gold -->
+  <rect x="1"  y="37" width="10" height="10" fill="#7a2c12"/>
+  <rect x="13" y="37" width="10" height="10" fill="#b88430"/>
+  <rect x="25" y="37" width="10" height="10" fill="#7a2c12"/>
+  <rect x="37" y="37" width="10" height="10" fill="#b88430"/>
+</svg>
