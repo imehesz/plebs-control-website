@@ -587,6 +587,51 @@
       color: #1a1510;
     }
 
+    /* ── COMING SOON ── */
+    .coming-soon-body {
+      position: relative;
+      width: 100%;
+      background: linear-gradient(160deg, #dbb26a, #c89848, #e4c080, #c89848, #b88438);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    .coming-soon-img {
+      width: 100%;
+      display: block;
+      filter: sepia(0.25) contrast(1.1);
+    }
+
+    .coming-soon-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.65) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 24px;
+      gap: 6px;
+    }
+
+    .coming-soon-text {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      font-size: clamp(20px, 4.5vw, 36px);
+      font-weight: 700;
+      color: #f0e8d0;
+      letter-spacing: 4px;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.95), 0 1px 0 rgba(0,0,0,0.7);
+    }
+
+    .coming-soon-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-style: italic;
+      color: #d4b86a;
+      letter-spacing: 3px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+    }
+
     /* ── HONEYPOT ── */
     .hp-field {
       position: absolute;
@@ -747,7 +792,7 @@
     </aside>
 
     <!-- Center: Scroll -->
-    <div class="scroll-wrapper">
+    <div class="scroll-wrapper" id="scroll-form-wrapper">
       <div class="scroll-rod"></div>
       <div class="scroll-body">
 
@@ -782,6 +827,21 @@
           </button>
         </div>
 
+      </div>
+      <div class="scroll-rod"></div>
+    </div>
+
+    <!-- Coming Soon (shown when env != prod) -->
+    <div class="scroll-wrapper" id="coming-soon-wrapper" style="display:none">
+      <div class="scroll-rod"></div>
+      <div class="coming-soon-body">
+        <img class="coming-soon-img"
+          src="https://image.pollinations.ai/prompt/ancient%20roman%20forum%20ruins%20dramatic%20cinematic%20moody%20atmospheric%20black%20and%20white%20stone%20arch%20columns%20torchlight%20rays%20epic%20scale%20photorealistic?width=480&height=300&model=flux&nologo=true"
+          alt="Coming soon" />
+        <div class="coming-soon-overlay">
+          <div class="coming-soon-text">COMING SOON</div>
+          <div class="coming-soon-sub">BREVI TEMPORE · MANE IN EXPECTATIONE</div>
+        </div>
       </div>
       <div class="scroll-rod"></div>
     </div>
@@ -1020,6 +1080,19 @@
   }
 
   setInterval(rotatePhrases, 10000);
+
+  // ── Coming soon gate ──
+  // ?env=prod shows the full site; anything else hides all tabs except DOMUS
+  // and replaces the signup scroll with a coming soon image.
+  (function() {
+    const isProd = new URLSearchParams(window.location.search).get('env') === 'prod';
+    if (!isProd) {
+      document.querySelector('.nav-tab[data-section="legions"]').style.display = 'none';
+      document.getElementById('tab-forum').style.display = 'none';
+      document.getElementById('scroll-form-wrapper').style.display = 'none';
+      document.getElementById('coming-soon-wrapper').style.display = 'flex';
+    }
+  })();
 </script>
 </body>
 </html>
