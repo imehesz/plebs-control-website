@@ -587,6 +587,18 @@
       color: #1a1510;
     }
 
+    /* ── HONEYPOT ── */
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     /* ── LEGIONS SUMMARY ── */
     .legions-summary {
       text-align: center;
@@ -708,7 +720,7 @@
       <button class="nav-tab" data-section="home">DOMUS</button>
       <button class="nav-tab" data-section="legions">LEGIONES</button>
       <!--  <button class="nav-tab" data-section="maps">REGIONES</button> -->
-      <button class="nav-tab" data-section="forum">FORUM ROMANUM</button>
+      <button class="nav-tab" id="tab-forum">FORUM ROMANUM</button>
     </nav>
   </header>
 
@@ -756,9 +768,15 @@
           </select>
         </div>
 
+        <!-- Honeypot: hidden from humans, bots fill it in -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp-website">Website</label>
+          <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
         <div class="seal-row">
           <div class="seal-band"></div>
-          <button class="wax-seal">
+          <button class="wax-seal" id="signup-btn">
             <div class="seal-icon">🦅</div>
             <div class="seal-text">SIGN UP NOW<br>· · · · ·</div>
           </button>
@@ -833,10 +851,16 @@
 <script>
   const BACKEND_URL = 'http://localhost:3000';
 
+  // ── Forum tab — opens Discord when ready ──
+  document.getElementById('tab-forum').addEventListener('click', () => {
+    // TODO: replace with real Discord invite link
+    alert('The Forum is not yet open. Check back soon, citizen.');
+  });
+
   // ── Tab / section routing ──
   const tabs     = document.querySelectorAll('.nav-tab[data-section]');
   const sections = document.querySelectorAll('.section');
-  const VALID_SECTIONS = ['home', 'legions', 'maps', 'forum'];
+  const VALID_SECTIONS = ['home', 'legions', 'maps'];
 
   function navigateTo(section, pushState) {
     if (!VALID_SECTIONS.includes(section)) section = 'home';
@@ -923,6 +947,12 @@
 
   document.getElementById('pag-prev').addEventListener('click', () => { legionsPage--; renderLegionsPage(); });
   document.getElementById('pag-next').addEventListener('click', () => { legionsPage++; renderLegionsPage(); });
+
+  // ── Signup honeypot check ──
+  document.getElementById('signup-btn').addEventListener('click', () => {
+    if (document.getElementById('hp-website').value) return; // bot detected, do nothing
+    // TODO: wire up actual signup submission here
+  });
 
   // Load section from URL hash on first paint — must run after all sections are defined
   navigateTo(location.hash.replace('#', '') || 'home', false);
