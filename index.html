@@ -57,21 +57,20 @@
 
     .shield {
       width: 72px;
-      height: 82px;
-      background: linear-gradient(160deg, #909090, #585858, #787878);
+      height: 96px;
       border-radius: 6px 6px 44% 44% / 6px 6px 52% 52%;
       border: 2px solid #404040;
       box-shadow: 3px 4px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      padding: 6px 4px 10px;
+      overflow: hidden;
     }
 
-    .shield-eagle { font-size: 30px; line-height: 1; filter: sepia(1) saturate(0.4) brightness(1.6); }
-    .shield-spqr  { font-size: 9px; font-weight: 700; color: #d4b86a; letter-spacing: 2px; }
+    .shield-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
 
     .emblem-label {
       background: linear-gradient(135deg, #666, #3a3a3a);
@@ -488,10 +487,203 @@
 
     @media (max-width: 380px) {
       .emblem { min-width: 60px; }
-      .shield { width: 56px; height: 64px; }
-      .shield-eagle { font-size: 22px; }
+      .shield { width: 56px; height: 75px; }
       .game-title { font-size: 22px; }
       .nav-tab { font-size: 8px; }
+    }
+
+    /* ── SECTION VISIBILITY ── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── LEGIONS TABLE ── */
+    .legions-section {
+      margin-top: 20px;
+    }
+
+    .legions-title {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      font-size: clamp(16px, 3.5vw, 26px);
+      font-weight: 700;
+      color: #f0e8d0;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .legions-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto 20px;
+    }
+    .legions-rule span { flex: 1; height: 1px; background: linear-gradient(to right, transparent, #d4b86a 40%, #d4b86a 60%, transparent); }
+    .legions-rule i    { width: 6px; height: 6px; background: #d4b86a; transform: rotate(45deg); display: block; }
+
+    .legions-table-wrap {
+      overflow-x: auto;
+    }
+
+    .legions-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .legions-table thead tr {
+      background: linear-gradient(135deg, #4a4a4a, #282828);
+      border-bottom: 2px solid #d4b86a;
+    }
+
+    .legions-table th {
+      color: #d4b86a;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 10px 12px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .legions-table td {
+      padding: 9px 12px;
+      color: #c8c0a8;
+      border-bottom: 1px solid rgba(100, 88, 48, 0.2);
+      white-space: nowrap;
+    }
+
+    .legions-table tbody tr:hover td {
+      background: rgba(212, 184, 106, 0.07);
+      color: #e8d490;
+    }
+
+    .legions-table .col-id    { color: #787060; font-size: 10px; }
+    .legions-table .col-rank  { color: #d4b86a; font-weight: 700; }
+    .legions-table .col-city  { font-style: italic; color: #b0a888; }
+    .legions-table .col-pop   { text-align: right; }
+    .legions-table .col-cash  { text-align: right; }
+    .legions-table .col-grain { text-align: right; }
+
+    .legions-empty {
+      text-align: center;
+      color: #706858;
+      font-style: italic;
+      font-size: 12px;
+      padding: 32px 0;
+    }
+
+    .legions-loading {
+      text-align: center;
+      color: #908070;
+      font-size: 11px;
+      padding: 32px 0;
+      letter-spacing: 1px;
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(135deg, #c8a850, #8a6828, #b08840);
+      color: #1a1510;
+    }
+
+    /* ── LEGIONS SUMMARY ── */
+    .legions-summary {
+      text-align: center;
+      color: #c8c0a8;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      line-height: 2;
+    }
+    .legions-summary span {
+      color: #e8d490;
+      font-weight: 700;
+    }
+
+    /* ── LEGIONS PAGINATION ── */
+    .legions-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 18px;
+      font-size: 10.5px;
+      letter-spacing: 1.5px;
+    }
+
+    .pag-btn {
+      background: linear-gradient(135deg, #4a4a4a, #282828);
+      color: #d4b86a;
+      border: 1px solid #585858;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 7px 18px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .pag-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #606060, #383838);
+    }
+    .pag-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .pag-info {
+      color: #908070;
+      font-size: 10px;
+      letter-spacing: 1px;
+      min-width: 110px;
+      text-align: center;
+    }
+
+    /* ── LEGIONS MOBILE CARDS ── */
+    @media (max-width: 600px) {
+      .legions-table thead { display: none; }
+
+      .legions-table, .legions-table tbody,
+      .legions-table tr, .legions-table td { display: block; width: 100%; }
+
+      .legions-table tr {
+        background: linear-gradient(160deg, #2a2a2a, #1a1a1a);
+        border: 1px solid rgba(100, 88, 48, 0.3);
+        margin-bottom: 10px;
+        padding: 10px 14px;
+      }
+      .legions-table tr:hover { background: linear-gradient(160deg, #2a2a2a, #1a1a1a); }
+
+      .legions-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(100, 88, 48, 0.15);
+        white-space: normal;
+        text-align: left;
+      }
+      .legions-table td:last-child { border-bottom: none; }
+
+      .legions-table td::before {
+        content: attr(data-label);
+        color: #d4b86a;
+        font-size: 8.5px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+
+      .legions-table .col-pop,
+      .legions-table .col-cash,
+      .legions-table .col-grain { text-align: right; }
+
+      .legions-table td.legions-empty,
+      .legions-table td.legions-loading { display: block; text-align: center; }
+      .legions-table td.legions-empty::before,
+      .legions-table td.legions-loading::before { display: none; }
     }
   </style>
 </head>
@@ -502,10 +694,9 @@
   <header class="header">
     <div class="emblem">
       <div class="shield">
-        <div class="shield-eagle">🦅</div>
-        <div class="shield-spqr">SPQR</div>
+        <img src="images/logo_spqr.jpg" alt="SPQR" class="shield-logo" />
       </div>
-      <div class="emblem-label">THE CHRONICLES<br>(HOME)</div>
+      <div class="emblem-label">THE CHRONICLES</div>
     </div>
 
     <div class="title-block">
@@ -514,12 +705,15 @@
     </div>
 
     <nav class="nav-tabs">
-      <button class="nav-tab">CAMPAIGNS</button>
-      <button class="nav-tab">LEGIONS</button>
-      <button class="nav-tab">MAPS</button>
-      <button class="nav-tab">FORUM</button>
+      <button class="nav-tab" data-section="home">DOMUS</button>
+      <button class="nav-tab" data-section="legions">LEGIONES</button>
+      <!--  <button class="nav-tab" data-section="maps">REGIONES</button> -->
+      <button class="nav-tab" data-section="forum">FORUM ROMANUM</button>
     </nav>
   </header>
+
+  <!-- HOME SECTION -->
+  <div id="section-home" class="section">
 
   <!-- HERO BANNER -->
   <div class="hero-banner">
@@ -600,10 +794,139 @@
     </div>
   </div>
 
+  </div><!-- end #section-home -->
+
+  <!-- LEGIONS SECTION -->
+  <div id="section-legions" class="section legions-section">
+    <div class="legions-title">ROMA</div>
+    <div class="legions-rule"><span></span><i></i><span></span></div>
+    <div class="legions-summary" id="legions-summary"></div>
+    <div class="legions-title" style="font-size: clamp(13px, 2.5vw, 18px); margin: 18px 0 6px;">LEGIONES</div>
+    <div class="legions-rule"><span></span><i></i><span></span></div>
+    <div class="legions-table-wrap">
+      <table class="legions-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>PLAYER</th>
+            <th>RANK</th>
+            <th>CITY</th>
+            <th class="col-pop">POPULATION</th>
+            <th class="col-cash">TREASURY</th>
+            <th class="col-grain">GRAIN</th>
+          </tr>
+        </thead>
+        <tbody id="legions-tbody">
+          <tr><td colspan="7" class="legions-loading">CONSULTING THE SENATE RECORDS…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legions-pagination" id="legions-pagination" style="display:none">
+      <button class="pag-btn" id="pag-prev">◂ PREV</button>
+      <span class="pag-info" id="pag-info"></span>
+      <button class="pag-btn" id="pag-next">NEXT ▸</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  // Populate dispatch hour dropdown in local time, value = UTC hour
+  const BACKEND_URL = 'http://localhost:3000';
+
+  // ── Tab / section routing ──
+  const tabs     = document.querySelectorAll('.nav-tab[data-section]');
+  const sections = document.querySelectorAll('.section');
+  const VALID_SECTIONS = ['home', 'legions', 'maps', 'forum'];
+
+  function navigateTo(section, pushState) {
+    if (!VALID_SECTIONS.includes(section)) section = 'home';
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.section === section));
+    sections.forEach(s => s.classList.toggle('active', s.id === `section-${section}`));
+    if (pushState) history.pushState(null, '', `#${section}`);
+    if (section === 'legions') loadLegions();
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => navigateTo(tab.dataset.section, true));
+  });
+
+  window.addEventListener('hashchange', () => {
+    navigateTo(location.hash.replace('#', '') || 'home', false);
+  });
+
+  // ── Legions leaderboard ──
+  function fmt(n) { return Number(n).toLocaleString(); }
+
+  const PAGE_SIZE = 50;
+  let legionsData = null;
+  let legionsPage = 1;
+
+  function renderLegionsPage() {
+    const tbody  = document.getElementById('legions-tbody');
+    const pagDiv = document.getElementById('legions-pagination');
+    const info   = document.getElementById('pag-info');
+    const prev   = document.getElementById('pag-prev');
+    const next   = document.getElementById('pag-next');
+
+    const total = legionsData.length;
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    legionsPage = Math.min(Math.max(1, legionsPage), totalPages);
+
+    const start = (legionsPage - 1) * PAGE_SIZE;
+    const slice = legionsData.slice(start, start + PAGE_SIZE);
+
+    tbody.innerHTML = slice.map(r => `
+      <tr>
+        <td class="col-id"  data-label="#">${r.rank}</td>
+        <td                 data-label="PLAYER">${r.player_name}</td>
+        <td class="col-rank" data-label="RANK">${r.rank_title}</td>
+        <td class="col-city" data-label="CITY">${r.city_name}</td>
+        <td class="col-pop"  data-label="POPULATION">${fmt(r.population)}</td>
+        <td class="col-cash" data-label="TREASURY">${fmt(r.treasury)}</td>
+        <td class="col-grain" data-label="GRAIN">${fmt(r.grain_stored)}</td>
+      </tr>`).join('');
+
+    if (totalPages > 1) {
+      pagDiv.style.display = '';
+      info.textContent = `PAGE ${legionsPage} OF ${totalPages}`;
+      prev.disabled = legionsPage === 1;
+      next.disabled = legionsPage === totalPages;
+    } else {
+      pagDiv.style.display = 'none';
+    }
+  }
+
+  async function loadLegions() {
+    if (legionsData) { renderLegionsPage(); return; }
+    const tbody = document.getElementById('legions-tbody');
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/legions`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      legionsData = await res.json();
+      if (!legionsData.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="legions-empty">No governors on record yet.</td></tr>`;
+        return;
+      }
+      legionsPage = 1;
+      const totalPop    = legionsData.reduce((s, r) => s + r.population, 0);
+      const totalCash   = legionsData.reduce((s, r) => s + r.treasury, 0);
+      document.getElementById('legions-summary').innerHTML =
+        `LEGIONES: <span>${fmt(legionsData.length)}</span>&nbsp;&nbsp;
+         POPULUS: <span>${fmt(totalPop)}</span>&nbsp;&nbsp;
+         DENARIUS: <span>${fmt(totalCash)}</span>`;
+      renderLegionsPage();
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="7" class="legions-empty">Could not reach the Senate. Try again later.</td></tr>`;
+      console.error('[legions]', e);
+    }
+  }
+
+  document.getElementById('pag-prev').addEventListener('click', () => { legionsPage--; renderLegionsPage(); });
+  document.getElementById('pag-next').addEventListener('click', () => { legionsPage++; renderLegionsPage(); });
+
+  // Load section from URL hash on first paint — must run after all sections are defined
+  navigateTo(location.hash.replace('#', '') || 'home', false);
+
   (function() {
     function toRoman(n) {
       if (n === 0) return 'N'; // Nulla — Romans had to start somewhere
