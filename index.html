@@ -384,6 +384,16 @@
     .seal-icon { font-size: 24px; filter: sepia(1) saturate(0.3) brightness(1.4); opacity: 0.8; }
     .seal-text { font-size: 7.5px; font-weight: 700; color: rgba(230,170,170,0.85); letter-spacing: 1.5px; text-align: center; line-height: 1.4; }
 
+    .signup-status {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 10.5px;
+      letter-spacing: 0.5px;
+      min-height: 1.4em;
+    }
+    .signup-status.error   { color: #8a1818; font-weight: 700; }
+    .signup-status.success { color: #3a5a20; font-weight: 700; }
+
     .form-dictionary {
       margin-top: 18px;
       padding-top: 12px;
@@ -807,12 +817,12 @@
 
         <div class="form-field">
           <label class="field-label">NOMEN</label>
-          <input class="field-input" type="text" placeholder="Name" />
+          <input class="field-input" type="text" id="signup-name" placeholder="Name" />
         </div>
 
         <div class="form-field">
           <label class="field-label">INSCRIPTIO</label>
-          <input class="field-input" type="email" placeholder="Email Address" />
+          <input class="field-input" type="email" id="signup-email" placeholder="Email Address" />
         </div>
 
         <div class="form-field" style="margin-bottom:0">
@@ -835,6 +845,8 @@
             <div class="seal-text">SIGN UP NOW<br>· · · · ·</div>
           </button>
         </div>
+
+        <div class="signup-status" id="signup-status"></div>
 
       </div>
       <div class="scroll-rod"></div>
@@ -1016,10 +1028,60 @@
   document.getElementById('pag-prev').addEventListener('click', () => { legionsPage--; renderLegionsPage(); });
   document.getElementById('pag-next').addEventListener('click', () => { legionsPage++; renderLegionsPage(); });
 
-  // ── Signup honeypot check ──
-  document.getElementById('signup-btn').addEventListener('click', () => {
+  // ── Signup: posts to the backend, which creates the account and sends
+  // a verification email (the player confirms ownership by replying ACCEPT).
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+  document.getElementById('signup-btn').addEventListener('click', async () => {
     if (document.getElementById('hp-website').value) return; // bot detected, do nothing
-    // TODO: wire up actual signup submission here
+
+    const statusEl = document.getElementById('signup-status');
+    const btn   = document.getElementById('signup-btn');
+    const name  = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const hour  = document.getElementById('dispatch-hour').value;
+
+    statusEl.className = 'signup-status';
+    statusEl.textContent = '';
+
+    if (!name) {
+      statusEl.className = 'signup-status error';
+      statusEl.textContent = 'The Senate requires your name, citizen.';
+      return;
+    }
+    if (!EMAIL_RE.test(email)) {
+      statusEl.className = 'signup-status error';
+      statusEl.textContent = 'That does not look like a valid email address.';
+      return;
+    }
+    if (hour === '') {
+      statusEl.className = 'signup-status error';
+      statusEl.textContent = 'Choose an hour for your dispatch to arrive.';
+      return;
+    }
+
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, deliveryHour: hour }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        statusEl.className = 'signup-status success';
+        statusEl.textContent = `A scroll has been sent to ${email}. Reply ACCEPT to confirm your appointment.`;
+      } else {
+        statusEl.className = 'signup-status error';
+        statusEl.textContent = data.message || 'The Senate could not process your petition.';
+      }
+    } catch (e) {
+      statusEl.className = 'signup-status error';
+      statusEl.textContent = 'Could not reach the Senate. Try again later.';
+      console.error('[signup]', e);
+    } finally {
+      btn.disabled = false;
+    }
   });
 
   // Load section from URL hash on first paint — must run after all sections are defined
