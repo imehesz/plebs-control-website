@@ -761,6 +761,106 @@
       .legions-table td.legions-empty::before,
       .legions-table td.legions-loading::before { display: none; }
     }
+
+    /* ── GAME INTRO ── */
+    .game-intro {
+      text-align: center;
+      color: #d8cdb0;
+      font-size: 12.5px;
+      line-height: 1.8;
+      letter-spacing: 0.3px;
+      max-width: 620px;
+      margin: 18px auto 4px;
+      padding: 0 8px;
+    }
+
+    /* ── CLICKABLE PANEL ── */
+    .panel-clickable {
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .panel-clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 6px 16px rgba(0,0,0,0.8);
+    }
+
+    /* ── NEWS SECTION (ACTA DIURNA) ── */
+    .news-back { text-align: center; margin-bottom: 18px; }
+    .news-back-link {
+      color: #d4b86a;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(212,184,106,0.4);
+      padding-bottom: 2px;
+    }
+    .news-back-link:hover { color: #f0e0a0; }
+
+    .news-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .news-card {
+      background: linear-gradient(160deg, #3c3c3c, #1c1c1c, #2c2c2c);
+      border: 2px solid #585858;
+      box-shadow: 3px 4px 12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+
+    .news-card-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      filter: sepia(0.3) contrast(1.1);
+    }
+
+    .news-card-body { padding: 16px 18px; }
+
+    .news-card-title {
+      font-family: 'Cinzel Decorative', 'Cinzel', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #e8d490;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .news-card-excerpt {
+      font-size: 11.5px;
+      color: #c0c0c0;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .news-card-more {
+      display: none;
+      font-size: 11.5px;
+      color: #a8a090;
+      line-height: 1.7;
+      margin-bottom: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(212,184,106,0.15);
+    }
+    .news-card-more.expanded { display: block; }
+
+    .read-more-btn {
+      background: linear-gradient(135deg, #4a4a4a, #282828);
+      color: #d4b86a;
+      border: 1px solid #585858;
+      font-family: 'Cinzel', serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .read-more-btn:hover { background: linear-gradient(135deg, #606060, #383838); }
   </style>
 </head>
 <body>
@@ -798,11 +898,18 @@
     <h2 class="tagline" id="tagline">RECLAIM THE GLORY<br>OF THE EMPIRE</h2>
   </div>
 
+  <p class="game-intro">
+    You are a newly appointed governor of a humble Roman backwater — one bad harvest or one furious mob
+    away from ruin, one shrewd decision away from glory. Manage grain, taxes, and the temper of the plebs
+    through immersive daily dispatches delivered straight to your inbox, and claw your way from a dusty
+    village all the way to the eternal splendor of Rome itself.
+  </p>
+
   <!-- MAIN CONTENT -->
   <div class="main-content">
 
     <!-- Left: News panel -->
-    <aside class="side-panel">
+    <aside class="side-panel panel-clickable" id="news-panel">
       <div class="panel-header">LATEST<br>NEWS</div>
       <img class="panel-image" src="images/roman_news.jpg" alt="Roman dispatch" />
       <div class="panel-body">
@@ -815,35 +922,37 @@
       <div class="scroll-rod"></div>
       <div class="scroll-body">
 
-        <div class="form-field">
-          <label class="field-label">NOMEN</label>
-          <input class="field-input" type="text" id="signup-name" placeholder="Name" />
-        </div>
+        <div id="signup-fields">
+          <div class="form-field">
+            <label class="field-label">NOMEN</label>
+            <input class="field-input" type="text" id="signup-name" placeholder="Name" />
+          </div>
 
-        <div class="form-field">
-          <label class="field-label">INSCRIPTIO</label>
-          <input class="field-input" type="email" id="signup-email" placeholder="Email Address" />
-        </div>
+          <div class="form-field">
+            <label class="field-label">INSCRIPTIO</label>
+            <input class="field-input" type="email" id="signup-email" placeholder="Email Address" />
+          </div>
 
-        <div class="form-field" style="margin-bottom:0">
-          <label class="field-label">CURSUS PUBLICUS TABELLARIUS</label>
-          <select class="field-select" id="dispatch-hour">
-            <option value="">EMAIL DELIVERY TIME</option>
-          </select>
-        </div>
+          <div class="form-field" style="margin-bottom:0">
+            <label class="field-label">CURSUS PUBLICUS TABELLARIUS</label>
+            <select class="field-select" id="dispatch-hour">
+              <option value="">EMAIL DELIVERY TIME</option>
+            </select>
+          </div>
 
-        <!-- Honeypot: hidden from humans, bots fill it in -->
-        <div class="hp-field" aria-hidden="true">
-          <label for="hp-website">Website</label>
-          <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
-        </div>
+          <!-- Honeypot: hidden from humans, bots fill it in -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="hp-website">Website</label>
+            <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
 
-        <div class="seal-row">
-          <div class="seal-band"></div>
-          <button class="wax-seal" id="signup-btn">
-            <div class="seal-icon">🦅</div>
-            <div class="seal-text">SIGN UP NOW<br>· · · · ·</div>
-          </button>
+          <div class="seal-row">
+            <div class="seal-band"></div>
+            <button class="wax-seal" id="signup-btn">
+              <div class="seal-icon">🦅</div>
+              <div class="seal-text">SIGN UP NOW<br>· · · · ·</div>
+            </button>
+          </div>
         </div>
 
         <div class="signup-status" id="signup-status"></div>
@@ -871,13 +980,7 @@
     <aside class="side-panel">
       <div class="panel-header">UPCOMING<br>EVENTS</div>
       <img class="panel-image" src="images/roman_events.jpg" alt="Roman colosseum" />
-      <div class="panel-body">
-        <span class="event-name">SATURNALIA<br>FESTIVAL</span>
-        <span class="event-date">March 20</span>
-        <div class="panel-rule"></div>
-        <span class="event-name">BATTLE OF<br>AUGUSTA</span>
-        <span class="event-date">March 11</span>
-      </div>
+      <div class="panel-body" id="events-panel-body"></div>
     </aside>
 
   </div>
@@ -927,10 +1030,18 @@
     </div>
   </div>
 
+  <!-- NEWS SECTION -->
+  <div id="section-news" class="section news-section">
+    <div class="legions-title">ACTA DIURNA</div>
+    <div class="legions-rule"><span></span><i></i><span></span></div>
+    <div class="news-back"><a href="#home" class="news-back-link">‹ RETURN TO DOMUS</a></div>
+    <div class="news-grid" id="news-grid"></div>
+  </div>
+
 </div>
 
 <script>
-  const BACKEND_URL = 'http://localhost:3000';
+  const BACKEND_URL = 'https://plebscontrol.com';
 
   // ── Forum tab — opens Discord ──
   document.getElementById('tab-forum').addEventListener('click', () => {
@@ -940,7 +1051,7 @@
   // ── Tab / section routing ──
   const tabs     = document.querySelectorAll('.nav-tab[data-section]');
   const sections = document.querySelectorAll('.section');
-  const VALID_SECTIONS = ['home', 'legions', 'maps'];
+  const VALID_SECTIONS = ['home', 'legions', 'maps', 'news'];
 
   function navigateTo(section, pushState) {
     if (!VALID_SECTIONS.includes(section)) section = 'home';
@@ -948,7 +1059,10 @@
     sections.forEach(s => s.classList.toggle('active', s.id === `section-${section}`));
     if (pushState) history.pushState(null, '', `#${section}`);
     if (section === 'legions') loadLegions();
+    if (section === 'news') renderNews();
   }
+
+  document.getElementById('news-panel').addEventListener('click', () => navigateTo('news', true));
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => navigateTo(tab.dataset.section, true));
@@ -1071,6 +1185,7 @@
       if (res.ok) {
         statusEl.className = 'signup-status success';
         statusEl.textContent = `A scroll has been sent to ${email}. Reply ACCEPT to confirm your appointment.`;
+        document.getElementById('signup-fields').style.display = 'none';
       } else {
         statusEl.className = 'signup-status error';
         statusEl.textContent = data.message || 'The Senate could not process your petition.';
@@ -1113,6 +1228,135 @@
       select.appendChild(opt);
     }
   })();
+
+  // ── Acta Diurna: silly Roman news ──
+  function pickRandom(arr, n) {
+    const copy = [...arr];
+    const out = [];
+    for (let i = 0; i < n && copy.length; i++) {
+      out.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+    }
+    return out;
+  }
+
+  const NEWS_ARTICLES = [
+    {
+      title: 'Local Baker Declares Himself "Panifex Maximus"',
+      image: 'images/news_baker.jpg',
+      excerpt: 'A humble baker in the Subura has crowned himself "Panifex Maximus" after his sourdough rose higher than the Senate\'s expectations.',
+      more: 'Witnesses say the self-proclaimed emperor of bread has already issued three edicts, all concerning the correct thickness of crust. The Senate has yet to respond, though several senators were seen sneaking out the back with warm loaves hidden under their togas. The baker\'s wife, speaking anonymously, confirmed he has not left the kitchen in four days and refuses to acknowledge any authority higher than yeast.'
+    },
+    {
+      title: 'Vestal Virgins Stage Protest Over New Toga Regulations',
+      excerpt: 'A dozen Vestals marched on the Forum this morning demanding the Senate reverse its ban on "excessively fashionable" hemlines.',
+      more: 'The protest, organized with surprising efficiency, featured hand-lettered scrolls reading "MY TOGA, MY CHOICE" and "SACRED FLAME, SACRED STYLE." A junior senator attempting to mediate was reportedly told to go tend his own eternal flame. Negotiations are expected to resume once everyone has calmed down and had some wine.'
+    },
+    {
+      title: 'Chariot Race Ends in Photo Finish, Judges Demand an Actual Photo',
+      image: 'images/news_chariot.jpg',
+      excerpt: 'Yesterday\'s Circus Maximus finale was declared a "photo finish" by the judges, who then remembered that photography has not been invented yet.',
+      more: 'After several hours of heated debate, argument by committee, and one memorable incident involving a trained goose, the judges settled the dispute the old-fashioned way: by drawing lots. Both charioteers have accepted the result with the grace and dignity Rome expects, which is to say, not at all.'
+    },
+    {
+      title: 'Senator Accidentally Votes to Exile Himself',
+      excerpt: 'A junior senator raised his hand at the wrong moment during yesterday\'s ostracism vote and is now, technically, banished from Rome.',
+      more: 'Colleagues say the senator had merely intended to signal a passing waiter for more olives. The Senate parliamentarian has confirmed the vote is binding under ancient and extremely petty procedural rules. The senator has been given three days to pack, or alternatively, to find a very good lawyer and an even better excuse.'
+    },
+    {
+      title: 'Retired Gladiator Opens Artisanal Olive Oil Shop in the Forum',
+      image: 'images/news_gladiator.jpg',
+      excerpt: 'The famed arena champion Maximus Oleum has traded his sword for a ladle, opening a boutique shop specializing in cold-pressed olive oil.',
+      more: 'Customers report the oil is "surprisingly good" and the sales pitch "somewhat terrifying," as Maximus has not yet learned to describe products without also describing how he would defeat them in single combat. Regardless, the shop has already sold out of its signature blend, "Blood, Sweat, and Extra Virgin."'
+    },
+    {
+      title: 'Aqueduct Leak Turns Forum Into Impromptu Public Bath',
+      excerpt: 'A burst pipe near the Capitoline has flooded half the Forum, and citizens have, naturally, decided to just start bathing there.',
+      more: 'City engineers estimate repairs will take a week, which several plebeians have interpreted as "one week of free spa access." Local vendors have already begun selling towels, rubber ducks carved from wood, and suspiciously specific bath oils at triple the normal price.'
+    },
+    {
+      title: 'Centurion Fined for Illegally Parking Entire Legion',
+      image: 'images/news_centurion.jpg',
+      excerpt: 'A centurion returning from campaign left his entire legion "parked" across a narrow street overnight, blocking traffic for hours.',
+      more: 'The fine, issued by a very brave municipal clerk, has reportedly been ignored, appealed, and then used as kindling. The centurion maintains that a legion of six thousand men "technically" fits in a two-cart-wide alley if everyone holds their breath.'
+    },
+    {
+      title: 'Oracle at Delphi Now Offering Same-Day Prophecy Service',
+      excerpt: 'In a bid to modernize, the Oracle at Delphi has introduced a "express lane" for citizens who need their destiny fulfilled by sundown.',
+      more: 'Standard prophecies still take the traditional three-to-five business omens, but the new premium tier guarantees cryptic doom within the hour. Early reviews are mixed, with one customer complaining his prophecy was "needlessly vague" and another complaining his was "far too specific."'
+    },
+    {
+      title: 'Plebeians Riot Over Bread Shortage, Then Remember the Cake',
+      image: 'images/news_cake.jpg',
+      excerpt: 'A tense standoff outside the granary dissolved into celebration this afternoon after someone recalled there was, in fact, cake.',
+      more: 'The riot, which began over a genuine grain shortfall, ended within the hour once a market vendor produced a surprisingly large honey cake "just in case." City officials have quietly filed this under "crisis successfully managed" and are hoping nobody asks about the grain again until next week.'
+    },
+    {
+      title: "Julius Caesar's Ghost Spotted Giving Unsolicited Senate Advice",
+      excerpt: 'Multiple senators report a translucent, toga-clad figure appearing in the Curia at midnight to critique their legislative technique.',
+      more: 'Witnesses say the apparition mostly complains about back-stabbing, both literal and political, and insists everyone should "just cross the Rubicon already." Security has been unable to remove him, partly because he\'s a ghost, and partly because his procedural points are, annoyingly, quite good.'
+    }
+  ];
+
+  function renderNews() {
+    const picked = pickRandom(NEWS_ARTICLES, 5);
+    const grid = document.getElementById('news-grid');
+    grid.innerHTML = picked.map((a, i) => `
+      <article class="news-card">
+        ${a.image ? `<img class="news-card-image" src="${a.image}" alt="${a.title}" />` : ''}
+        <div class="news-card-body">
+          <h3 class="news-card-title">${a.title}</h3>
+          <p class="news-card-excerpt">${a.excerpt}</p>
+          <p class="news-card-more" id="news-more-${i}">${a.more}</p>
+          <button class="read-more-btn" data-target="news-more-${i}">READ MORE ▾</button>
+        </div>
+      </article>
+    `).join('');
+
+    grid.querySelectorAll('.read-more-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        const expanded = target.classList.toggle('expanded');
+        btn.textContent = expanded ? 'READ LESS ▴' : 'READ MORE ▾';
+      });
+    });
+  }
+
+  // ── Upcoming events: random pick + always-future dates ──
+  const EVENTS = [
+    'SATURNALIA FESTIVAL', 'BATTLE OF AUGUSTA', 'FEAST OF BACCHUS', 'GLADIATOR GRAND MELEE',
+    'SENATE TAX DEBATE', 'FESTIVAL OF VESTA', 'GRAIN DOLE DISTRIBUTION', 'CHARIOT DERBY FINALS',
+    'TRIUMPH OF THE LEGIONS', 'AQUEDUCT DEDICATION', 'FORUM ORATORY CONTEST', 'FEAST OF JUPITER',
+    'CENSUS OF THE PLEBS', 'GLADIATOR RECRUITMENT DAY', 'FESTIVAL OF MARS', 'SENATE ELECTION DAY',
+    'GREAT TOGA PARADE', 'FEAST OF CERES', 'LEGION MUSTER DRILL', 'OLIVE HARVEST FAIR',
+    'WINE PRESSING FESTIVAL', 'ORACLE CONSULTATION DAY', 'COLOSSEUM RE-DEDICATION',
+    "MERCHANT'S GUILD SUMMIT", 'FESTIVAL OF FORTUNA'
+  ];
+
+  function daysFromNow(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+  }
+
+  function renderEvents() {
+    const picked = pickRandom(EVENTS, 5);
+    // a couple next week (5-13 days out), a couple next month (25-45 days out)
+    const offsets = [
+      5 + Math.floor(Math.random() * 9),
+      5 + Math.floor(Math.random() * 9),
+      25 + Math.floor(Math.random() * 21),
+      25 + Math.floor(Math.random() * 21),
+      Math.random() < 0.5 ? 5 + Math.floor(Math.random() * 9) : 25 + Math.floor(Math.random() * 21)
+    ].sort(() => Math.random() - 0.5);
+
+    const body = document.getElementById('events-panel-body');
+    body.innerHTML = picked.map((name, i) => `
+      <span class="event-name">${name}</span>
+      <span class="event-date">${daysFromNow(offsets[i])}</span>
+      ${i < picked.length - 1 ? '<div class="panel-rule"></div>' : ''}
+    `).join('');
+  }
+  renderEvents();
 
   const bgs = [
     'images/bg_rome_1.jpg',
