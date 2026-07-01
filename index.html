@@ -1199,9 +1199,6 @@
     }
   });
 
-  // Load section from URL hash on first paint — must run after all sections are defined
-  navigateTo(location.hash.replace('#', '') || 'home', false);
-
   (function() {
     function toRoman(n) {
       if (n === 0) return 'N'; // Nulla — Romans had to start somewhere
@@ -1408,6 +1405,11 @@
       document.getElementById('coming-soon-wrapper').style.display = 'flex';
     }
   })();
+
+  // Load section from URL hash on first paint — must run last, after every
+  // section's dependencies (NEWS_ARTICLES, EVENTS, etc.) are declared, since
+  // a section like #news can be the very first thing rendered on refresh.
+  navigateTo(location.hash.replace('#', '') || 'home', false);
 </script>
 </body>
 </html>
